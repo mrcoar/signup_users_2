@@ -1,0 +1,74 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.5.14'
+    id 'io.spring.dependency-management' version '1.1.6' // Explicitly apply dependency management
+    id 'pmd'
+    id 'org.sonarqube' version '4.3.1.3277'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    // Use Spring Boot's dependency management to align versions
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.14'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.14'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.14'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.14'
+
+    // Lombok for compile and test
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testImplementation 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // Other dependencies
+    api 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'com.google.guava:guava:33.0.0-jre' // Updated to latest version
+    testImplementation 'org.hamcrest:hamcrest-library:2.2' // Updated to latest version
+
+    implementation 'org.flywaydb:flyway-core:8.0.2'
+    implementation 'org.modelmapper:modelmapper:2.4.4'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    runtimeOnly 'com.h2database:h2'
+}
+
+test {
+    useJUnitPlatform()
+    reports {
+        junitXml {
+            mergeReruns = false
+        }
+    }
+    ignoreFailures true
+    testLogging {
+        minGranularity = 3
+        exceptionFormat = 'full'
+        events = ['passed', 'failed', 'skipped']
+    }
+}
+
+group = 'cl.maraneda'
+version = '0.0.1-SNAPSHOT'
+description = 'signup-users2'
+java.sourceCompatibility = JavaVersion.VERSION_11
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
